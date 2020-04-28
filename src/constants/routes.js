@@ -1,0 +1,9 @@
+export const HOME = '/';
+export const DASHBOARD = '/dashboard';
+export const SIGN_IN = '/signin';
+export const SIGN_UP = '/signup';
+export const ACCOUNT = '/account';
+export const ADMIN = '/admin';
+export const PASSWORD_FORGET = '/pw-forget';
+export const SKILLS = '/skills/:skillName';
+export const LESSONS = '/skills/:skillName/:lessonName';
