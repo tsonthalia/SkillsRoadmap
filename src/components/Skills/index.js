@@ -22,17 +22,23 @@ class SkillsPageBase extends Component {
     this.props.firebase
       .skill(skillName)
       .on('value', snapshot => {
-        const lessonsObject = snapshot.val().lessons;
+        if (snapshot.val() !== null) {
+          const lessonsObject = snapshot.val().lessons;
 
-        const lessonsList = Object.keys(lessonsObject).map(key => ({
-          ...lessonsObject[key],
-        }));
+          const lessonsList = Object.keys(lessonsObject).map(key => ({
+            ...lessonsObject[key],
+          }));
 
-        this.setState({
-          skillName: snapshot.val().skillName,
-          skillCreator: snapshot.val().skillCreator,
-          lessons: lessonsList,
-        })
+          this.setState({
+            skillName: snapshot.val().skillName,
+            skillCreator: snapshot.val().skillCreator,
+            lessons: lessonsList,
+          })
+        } else {
+          this.setState({
+            skillName: "Skill Does Not Exist",
+          })
+        }
       })
   }
 
@@ -112,10 +118,7 @@ const SkillsSearchForm = compose(
   withFirebase
 )(SkillsSearchFormBase)
 
-const SkillsPage = compose(
-  withRouter,
-  withFirebase
-)(SkillsPageBase)
+const SkillsPage = withFirebase(SkillsPageBase)
 
 export default SkillsPage;
 

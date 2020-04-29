@@ -23,6 +23,9 @@ const NavigationAuth = () => (
       <Link to={ROUTES.ACCOUNT}>Account</Link>
     </li>
     <li>
+      <Link to={ROUTES.CREATE_SKILL}>Create Skill</Link>
+    </li>
+    <li>
       <Link to={ROUTES.ADMIN}>Admin</Link>
     </li>
     <li>

@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
 
-class LessonsPageBase extends Component {
+class LessonPageBase extends Component {
   constructor(props) {
     super(props);
 
@@ -24,11 +24,17 @@ class LessonsPageBase extends Component {
     this.props.firebase
       .lesson(skillName, lessonName)
       .on('value', snapshot => {
-        this.setState({
-          lessonName: snapshot.val().lessonName,
-          lessonLink: snapshot.val().lessonLink,
-          lessonSource: snapshot.val().lessonSource,
-        })
+        if (snapshot.val() !== null) {
+          this.setState({
+            lessonName: snapshot.val().lessonName,
+            lessonLink: snapshot.val().lessonLink,
+            lessonSource: snapshot.val().lessonSource,
+          })
+        } else {
+          this.setState({
+            lessonName: "Lesson Does Not Exist"
+          })
+        }
       })
   }
 
@@ -68,7 +74,7 @@ class LessonsSearchFormBase extends Component {
   onSubmit = event => {
     const { query } = this.state;
 
-    this.props.history.push(query);
+    this.props.history.push(this.props.history.location.pathname + '/' + query);
 
     event.preventDefault();
   }
@@ -105,11 +111,8 @@ const LessonsSearchForm = compose(
   withFirebase
 )(LessonsSearchFormBase)
 
-const LessonsPage = compose(
-  withRouter,
-  withFirebase
-)(LessonsPageBase)
+const LessonPage = withFirebase(LessonPageBase)
 
-export default LessonsPage;
+export default LessonPage;
 
 export { LessonsSearchForm };

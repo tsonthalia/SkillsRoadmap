@@ -13,7 +13,8 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import SkillsPage from '../Skills';
-import LessonsPage from '../Lessons';
+import LessonPage from '../Lessons';
+import CreateSkillPage from '../CreateSkill';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
@@ -32,8 +33,8 @@ const App = () => (
       <Route path={ROUTES.DASHBOARD} component={Dashboard} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
-
-      <Route exact path={ROUTES.LESSONS} component={LessonsPage} />
+      <Route path={ROUTES.CREATE_SKILL} component={CreateSkillPage}/>
+      <Route exact path={ROUTES.LESSONS} component={LessonPage} />
       <Route exact path={ROUTES.SKILLS} component={SkillsPage} />
     </div>
   </Router>
