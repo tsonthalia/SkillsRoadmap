@@ -7,136 +7,21 @@ import { PasswordForgetLink } from '../PasswordForget'
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
+import SignInForm from './signInForm';
+import SignInGoogle from './signInGoogle';
+import SignInFacebook from './signInFacebook';
+
 const SignInPage = () => (
   <div>
     <h1>Sign In</h1>
     <SignInForm />
     <SignInGoogle />
+    <SignInFacebook />
     <PasswordForgetLink />
     <SignUpLink />
   </div>
 );
 
-const INITIAL_STATE = {
-  email: '',
-  password: '',
-  error: null,
-}
-
-class SignInFormBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { ...INITIAL_STATE };
-  }
-
-  onSubmit = event => {
-    const {
-      email,
-      password,
-    } = this.state;
-
-
-    // this.props.firebase
-    //   .doAddMessage(email)
-    //   .then(result => {
-    //     // Read result of the Cloud Function.
-    //     console.log(result.data)
-    //     // ...
-    //   }).catch(error => {
-    //     var code = error.code;
-    //     var message = error.message;
-    //     var details = error.details;
-    //   })
-
-    this.props.firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.DASHBOARD);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
-
-    event.preventDefault();
-  }
-
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-
-  render() {
-    const {
-      email,
-      password,
-      error,
-    } = this.state;
-
-    const isInvalid =
-      password === '' ||
-      email === '';
-
-    return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-
-        <button disabled={isInvalid} type="submit">
-          Sign In
-        </button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-    )
-  }
-}
-
-class SignInGoogleBase extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { error: null };
-  }
-
-  onSubmit = event => {
-    this.props.firebase
-      .doSignInWithGoogle()
-      .then(socialAuthUser => {
-        this.setState({ error: null });
-        this.props.history.push(ROUTES.DASHBOARD);
-      })
-      .catch(error => {
-        this.setState({ error });
-      })
-
-    event.preventDefault();
-  }
-
-  render() {
-    const { error } = this.state;
-    
-    return (
-      <form onSubmit={this.onSubmit}>
-        <button type="submit">Sign In with Google</button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-    )
-  }
-}
 
 const SignInLink = () => (
   <p>
@@ -144,16 +29,6 @@ const SignInLink = () => (
   </p>
 )
 
-const SignInForm = compose(
-  withRouter,
-  withFirebase
-)(SignInFormBase);
-
-const SignInGoogle = compose(
-  withRouter,
-  withFirebase
-)(SignInGoogleBase);
-
 export default SignInPage;
 
-export { SignInForm, SignInGoogle, SignInLink }
+export { SignInForm, SignInGoogle, SignInFacebook, SignInLink }
