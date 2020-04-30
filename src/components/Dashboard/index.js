@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { AuthUserContext, withAuthorization } from '../Session';
-import { SkillsSearchForm } from '../Skills'
+import { SkillsSearchForm } from '../Skills';
+
+import * as ROUTES from '../../constants/routes';
 
 const Dashboard = () => (
   <AuthUserContext.Consumer>

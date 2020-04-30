@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { SkillsSearchForm } from '../Skills'
+import { SkillsSearchForm } from '../Skills';
+import { withAuthorization } from '../Session';
+
+import * as ROUTES from '../../constants/routes';
 
 const Home = () => (
   <div>
@@ -8,5 +11,7 @@ const Home = () => (
     <SkillsSearchForm />
   </div>
 );
+
+const condition = authUser => !null;
 
 export default Home;

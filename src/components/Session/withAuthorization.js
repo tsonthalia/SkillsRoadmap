@@ -6,14 +6,18 @@ import AuthUserContext from './context'
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
-const withAuthorization = condition => Component => {
+const withAuthorization = (condition, redirectLocation) => Component => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
-      this.listener = this.props.firebase.auth.onAuthStateChanged(
+      this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
           if (!condition(authUser)) {
-            this.props.history.push(ROUTES.SIGN_IN);
+            console.log("HELLO")
+            this.props.history.push(ROUTES.DASHBOARD);
           }
+        },
+        () => {
+          this.props.history.push(ROUTES.SIGN_IN);
         },
       )
     }
@@ -25,7 +29,7 @@ const withAuthorization = condition => Component => {
     render() {
       return (
         <AuthUserContext.Consumer>
-          {authUser => 
+          {authUser =>
             condition(authUser) ? <Component {...this.props} /> : null
           }
         </AuthUserContext.Consumer>

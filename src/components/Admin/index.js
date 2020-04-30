@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 
 import { withAuthorization } from '../Session';
 
+import * as ROUTES from '../../constants/routes';
+import * as ROLES from '../../constants/roles';
+
 class AdminPage extends Component {
   constructor(props) {
     super(props);
@@ -70,6 +73,7 @@ const UserList = ({ users }) => (
   </table>
 )
 
-const condition = authUser => !!authUser;
+const condition = authUser =>
+  authUser && !!authUser.roles[ROLES.ADMIN];
 
 export default withAuthorization(condition)(AdminPage);

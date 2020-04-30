@@ -3,12 +3,15 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
+import { SignInLink } from '../SignIn';
 import * as ROUTES from '../../constants/routes';
+import * as ROLES from '../../constants/roles';
 
 const SignUpPage = () => (
   <div>
     <h1>Sign Up</h1>
     <SignUpForm />
+    <SignInLink />
   </div>
 );
 
@@ -17,6 +20,7 @@ const INITIAL_STATE = {
   email: '',
   passwordOne: '',
   passwordTwo: '',
+  isAdmin: false,
   error: null,
 };
 
@@ -31,8 +35,17 @@ class SignUpFormBase extends Component {
     const {
       username,
       email,
-      passwordOne
+      passwordOne,
+      isAdmin,
     } = this.state;
+
+    const roles = {};
+
+    if (isAdmin) {
+      roles[ROLES.ADMIN] = ROLES.ADMIN
+    }
+
+    console.log(roles);
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
@@ -41,7 +54,8 @@ class SignUpFormBase extends Component {
           .user(authUser.user.uid)
           .set({
             username,
-            email
+            email,
+            roles
           });
       })
       .then(() => {
@@ -59,12 +73,17 @@ class SignUpFormBase extends Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
+  onChangeCheckbox = event => {
+    this.setState({ [event.target.name]: event.target.checked });
+  }
+
   render() {
     const {
       username,
       email,
       passwordOne,
       passwordTwo,
+      isAdmin,
       error
     } = this.state;
 
@@ -83,6 +102,7 @@ class SignUpFormBase extends Component {
           type="text"
           placeholder="Username"
         />
+        <br />
         <input
           name="email"
           value={email}
@@ -90,6 +110,7 @@ class SignUpFormBase extends Component {
           type="text"
           placeholder="Email Address"
         />
+        <br />
         <input
           name="passwordOne"
           value={passwordOne}
@@ -97,6 +118,7 @@ class SignUpFormBase extends Component {
           type="password"
           placeholder="Password"
         />
+        <br />
         <input
           name="passwordTwo"
           value={passwordTwo}
@@ -104,7 +126,14 @@ class SignUpFormBase extends Component {
           type="password"
           placeholder="Confirm Password"
         />
-
+        <br />
+        {/*<input
+          name="isAdmin"
+          type="checkbox"
+          checked={isAdmin}
+          onChange={this.onChangeCheckbox}
+        />*/}
+        <br />
         <button disabled={isInvalid} type="submit">
           Sign Up
         </button>
