@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
-import { SignInLink } from '../SignIn';
+import { SignInGoogle, SignInFacebook, SignInLink } from '../SignIn';
 import * as ROUTES from '../../constants/routes';
 import * as ROLES from '../../constants/roles';
 
@@ -11,6 +11,8 @@ const SignUpPage = () => (
   <div>
     <h1>Sign Up</h1>
     <SignUpForm />
+    <SignInGoogle />
+    <SignInFacebook />
     <SignInLink />
   </div>
 );
@@ -45,24 +47,30 @@ class SignUpFormBase extends Component {
       roles[ROLES.ADMIN] = ROLES.ADMIN
     }
 
-    console.log(roles);
-
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         return this.props.firebase
           .user(authUser.user.uid)
           .set({
+            uid: authUser.user.uid,
             username,
             email,
             roles
           });
       })
       .then(() => {
+        return this.props.firebase.doSendEmailVerification();
+      })
+      .then(() => {
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.DASHBOARD);
       })
       .catch(error => {
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
+
         this.setState({ error });
       });
 
@@ -149,6 +157,9 @@ const SignUpLink = () => (
     Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
   </p>
 )
+
+const ERROR_CODE_ACCOUNT_EXISTS ='auth/account-exists-with-different-credential';
+const ERROR_MSG_ACCOUNT_EXISTS = `An account with an E-Mail address to this social account already exists. Try to login from this account instead and associate your social accounts on your personal account page.`;
 
 const SignUpForm = compose(
   withRouter,

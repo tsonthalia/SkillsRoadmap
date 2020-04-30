@@ -10,7 +10,7 @@ const Dashboard = () => (
     {authUser => (
       <div>
         <h1>Dashboard</h1>
-        <p>Logged in as {authUser.email}</p>
+        <p>Logged in as {authUser.username}</p>
         <SkillsSearchForm />
       </div>
     )}
