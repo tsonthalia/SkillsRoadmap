@@ -4,8 +4,7 @@ import PasswordChangeForm from '../PasswordChange';
 import { AuthUserContext, withAuthorization } from '../Session';
 import { withFirebase } from '../Firebase';
 
-import * as ROUTES from '../../constants/routes'
-
+// import * as ROUTES from '../../constants/routes'
 
 const SIGN_IN_METHODS = [
   {
@@ -124,6 +123,8 @@ class LoginManagementBase extends Component {
             )
           })}
         </ul>
+
+        {error && <p>{error.message}</p>}
       </div>
     )
   }

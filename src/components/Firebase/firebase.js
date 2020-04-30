@@ -111,7 +111,7 @@ class Firebase {
   }
 
   doCreateSkill = (skillName, skillCreator, lessons) => {
-    var createSkill = this.functions.httpCallable('createSkill');
+    //var createSkill = this.functions.httpCallable('createSkill');
     return null
   }
 }

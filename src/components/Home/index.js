@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { SkillsSearchForm } from '../Skills';
-import { withAuthorization } from '../Session';
+// import { withAuthorization } from '../Session';
 
-import * as ROUTES from '../../constants/routes';
+// import * as ROUTES from '../../constants/routes';
 
 const Home = () => (
   <div>
@@ -12,6 +12,6 @@ const Home = () => (
   </div>
 );
 
-const condition = authUser => !null;
+// const condition = authUser => !null;
 
 export default Home;

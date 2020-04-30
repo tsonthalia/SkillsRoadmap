@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget'
-import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 import SignInForm from './signInForm';
