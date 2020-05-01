@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import { Button } from 'react-bootstrap';
 
 import { withFirebase } from '../Firebase';
 import { AuthUserContext, withAuthorization } from '../Session';
-import Button from 'react-bootstrap/Button';
 
 const CreateSkillPageBase = () => (
   <AuthUserContext.Consumer>
@@ -16,7 +16,11 @@ const CreateSkillPageBase = () => (
 
 const INITIAL_STATE = {
   skillName: '',
-  lessons: [{lessonName:"", lessonLink:"", lessonSource:""}],
+  lessons: [{
+    lessonName: "",
+    lessonLink: "",
+    lessonSource: ""
+  }],
   error: null,
 }
 
@@ -38,14 +42,10 @@ class CreateSkillFormBase extends Component {
       .set({
         skillName,
         skillCreator: this.props.authUser.email,
-		lessons
+	      lessons
       })
       .then(() => {
-        this.setState({
-		  skillName: '',
-		  lessons: [{lessonName:"", lessonLink:"", lessonSource:""}],
-		  error: null,
-		});
+        this.setState({ ...INITIAL_STATE });
       })
       .catch(error => {
         this.setState({ error });
@@ -54,18 +54,44 @@ class CreateSkillFormBase extends Component {
     event.preventDefault();
   }
 
-  onChangeSkillName = (event) => {
+  onChangeSkillName = event => {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  onChangeLesson = (event, i) => {
+    var temp = this.state.lessons;
+    temp[i][event.target.name] = event.target.value;
+    this.setState({ lessons: temp });
+  }
+
+  onAddLesson = (event, i) => {
+    var temp = this.state.lessons;
+    temp.splice(i+1, 0, {lessonName:"", lessonLink:"", lessonSource:""}); // Inserting Lesson
+    this.setState({ lessons: temp });
+  }
+
+  onDeleteLesson = (event, i) => {
+    if(this.state.lessons.length > 1){
+      var temp = this.state.lessons;
+      temp.splice(i, 1); // Deleting Lesson
+      this.setState({ lessons: temp });
+    }
   }
 
   render() {
     const {
       skillName,
-	  lessons,
+      lessons,
       error,
     } = this.state;
 
-    const isInvalid = skillName === '';
+    const isInvalid =
+      skillName === '' ||
+      lessons[0].lessonName === '' ||
+      lessons[0].lessonLink === '' ||
+      lessons[0].lessonSource === '';
+
+    const isInvalidDelete = lessons.length <= 1;
 
     return (
       <div>
@@ -78,63 +104,46 @@ class CreateSkillFormBase extends Component {
             type="text"
             placeholder="Skill Name"
           />
-		  {lessons.map((lesson, i) => (
-			  <div>
-			  <input
-				name="lessonName"
-				value={lesson.lessonName}
-				onChange={(event) => {
-					 var temp = this.state.lessons;
-					 temp[i].lessonName = event.target.value;
-					 this.setState({lessons: temp});
-				}}
-				type="text"
-				placeholder="Lesson Name"
-			  />
-			  <input
-				name="lessonLink"
-				value={lesson.lessonLink}
-				onChange={(event) => {
-					 var temp = this.state.lessons;
-					 temp[i].lessonLink = event.target.value;
-					 this.setState({lessons: temp});
-				}}
-				type="text"
-				placeholder="Lesson Link"
-			  />
-			  <input
-				name="lessonSource"
-				value={lesson.lessonSource}
-				onChange={(event) => {
-					console.log("hi");
-					 var temp = this.state.lessons;
-					 temp[i].lessonSource = event.target.value;
-					 this.setState({lessons: temp});
-				}}
-				type="text"
-				placeholder="Lesson Source"
-			  />
-			  <Button onClick={(event) => {
-				  console.log("hi");
-				var temp = this.state.lessons;
-				temp.splice(i+1, 0, {lessonName:"", lessonLink:"", lessonSource:""}); //inserting
-				this.setState({lessons:temp});
-				console.log(this.state.lessons);
-			  }}>
-				"Add"
-			  </Button>
-			  <Button onClick={(event) => {
-				if(lessons.length > 1){
-					var temp = this.state.lessons;
-					temp.splice(i, 1); //deleting
-					this.setState({lessons:temp});
-				}
-			  }}>
-				"Delete"
-			  </Button>
-		  </div>
-		  ))}
-		  
+
+		      {
+            lessons.map((lesson, i) => (
+              <div key={i}>
+                <input
+                  name="lessonName"
+                  value={lesson.lessonName}
+                  onChange={(event) => this.onChangeLesson(event, i)}
+
+                  type="text"
+                  placeholder="Lesson Name"
+                />
+                <input
+                  name="lessonLink"
+                  value={lesson.lessonLink}
+                  onChange={(event) => this.onChangeLesson(event, i)}
+                  type="text"
+                  placeholder="Lesson Link"
+                />
+                <input
+                  name="lessonSource"
+                  value={lesson.lessonSource}
+                  onChange={(event) => this.onChangeLesson(event, i)}
+                  type="text"
+                  placeholder="Lesson Source"
+                />
+
+                <Button onClick={(event) => this.onAddLesson(event, i)} >
+                  Add
+                </Button>
+
+                <Button
+                  onClick={(event) => this.onDeleteLesson(event, i)}
+                  disabled={isInvalidDelete}
+                >
+                  Delete
+                </Button>
+              </div>
+            ))
+          }
 
           <button disabled={isInvalid} type="submit">
             Create Skill
