@@ -34,7 +34,8 @@ class CreateSkillFormBase extends Component {
   onSubmit = event => {
     console.log(this.props.authUser)
     const {
-      skillName, lessons
+      skillName,
+      lessons
     } = this.state;
 
     this.props.firebase
@@ -51,6 +52,15 @@ class CreateSkillFormBase extends Component {
         this.setState({ error });
       });
 
+    this.props.firebase
+      .userSpecific(this.props.authUser.uid, 'createdSkills')
+      .update({
+        [skillName]: skillName,
+      })
+      .catch(error => {
+        this.setState({ error });
+      })
+
     event.preventDefault();
   }
 
@@ -66,7 +76,7 @@ class CreateSkillFormBase extends Component {
 
   onAddLesson = (event, i) => {
     var temp = this.state.lessons;
-    temp.splice(i+1, 0, {lessonName:"", lessonLink:"", lessonSource:""}); // Inserting Lesson
+    temp.splice(i+1, 0, { lessonName: "", lessonLink: "", lessonSource: "" }); // Inserting Lesson
     this.setState({ lessons: temp });
   }
 
