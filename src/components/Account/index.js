@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import PasswordChangeForm from '../PasswordChange';
 import { AuthUserContext, withAuthorization } from '../Session';
@@ -26,6 +27,33 @@ const AccountPage = () => (
     {authUser => (
       <div>
         <h1>Account {authUser.email}</h1>
+
+        <h2>Liked Skills</h2>
+        <ul>
+          {
+            Object.keys(authUser.likedSkills).map((key, i) => (
+              <li key={i}>
+                <Link to={`/skills/${authUser.likedSkills[key]}`}>
+                  {authUser.likedSkills[key]}
+                </Link>
+              </li>
+            ))
+          }
+        </ul>
+
+        <h2>Moderated Skills</h2>
+        <ul>
+          {
+            Object.keys(authUser.moderatedSkills).map((key, i) => (
+              <li key={i}>
+                <Link to={`/skills/${authUser.moderatedSkills[key]}`}>
+                  {authUser.moderatedSkills[key]}
+                </Link>
+              </li>
+            ))
+          }
+        </ul>
+
         <PasswordChangeForm />
         <LoginManagement authUser={authUser} />
       </div>
