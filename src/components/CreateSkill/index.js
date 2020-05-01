@@ -41,7 +41,7 @@ class CreateSkillFormBase extends Component {
       .skill(skillName)
       .set({
         skillName,
-        skillCreator: this.props.authUser.email,
+        skillCreator: this.props.authUser.uid,
 	      lessons
       })
       .then(() => {

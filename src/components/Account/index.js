@@ -26,6 +26,25 @@ const AccountPage = () => (
     {authUser => (
       <div>
         <h1>Account {authUser.email}</h1>
+
+        <h2>Liked Skills</h2>
+        <ul>
+          {
+            Object.keys(authUser.likedSkills).map((key, i) => (
+              <li key={i}>{authUser.likedSkills[key]}</li>
+            ))
+          }
+        </ul>
+
+        <h2>Moderated Skills</h2>
+        <ul>
+          {
+            Object.keys(authUser.moderatedSkills).map((key, i) => (
+              <li key={i}>{authUser.moderatedSkills[key]}</li>
+            ))
+          }
+        </ul>
+
         <PasswordChangeForm />
         <LoginManagement authUser={authUser} />
       </div>
